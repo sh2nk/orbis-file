@@ -22,7 +22,10 @@ class Filename:
         return ".%s" % self.__ext
 
     def getID(self):
-        return "%s.%s" % str(uuid.uuid4()), self.__ext
+        print(str(uuid.uuid4()))
+        print(self.__name)
+        print(self.__ext)
+        return "%s.%s" % (str(uuid.uuid4()), self.__ext)
 
     def isDisabled(self):
         return '.' in self.__name and self.__ext in app.config["DISABLED_EXTENSIONS"]
@@ -35,24 +38,23 @@ def uploadFile(comment=""):
         abort(400, description="Missing file part")
         
     raw = request.files["file"]
-    secure = secure_filename(raw.filename)
-    filename = Filename(secure)
+    filename = Filename(secure_filename(raw.filename))
 
     if filename() == '':
-        abort(400, description="Empty filename")
+        return jsonify({"error": "Empty filename"}), 400
 
     if not raw:
-        abort(400, description="Empty file part")
+        return jsonify({"error": "Empty file part"}), 400
 
     if not filename.isDisabled():
-        fileid = filename.getID
+        fileid = filename.getID()
         path = os.path.join(app.config['UPLOAD_FOLDER'], fileid)
         
-        os.save(path)
+        raw.save(path)
         size = os.stat(path).st_size
 
-        file = File(name=filename.getName, \
-                    extension=filename.getExt, \
+        file = File(name=filename.getName(), \
+                    extension=filename.getExt(), \
                     size=size, \
                     path=path, \
                     comment=comment)
@@ -60,6 +62,6 @@ def uploadFile(comment=""):
         db.session.add(file)
         db.session.commit()
     else:
-        abort(400, description="This file extension is disabled")
+        return jsonify({"error": "This file extension is disabled"}), 400
     
-    return jsonify({"message": "Added %s succsesfully" % secure})
+    return {"message": "Added %s succsesfully" % file.name}

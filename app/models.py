@@ -22,3 +22,6 @@ class File(db.Model):
 
     def __repr__(self):
         return f"<File {self.name}>"
+
+    def to_dict (self):
+        return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
