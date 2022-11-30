@@ -23,9 +23,11 @@ POSTGRES_DB=orbisfile
 
 ### Deploy with Docker
 
-When deploying this setup, the fileserver will be available at port 80
+When deploying this setup, the fileserver will be available at port 8880
 
 `docker compose up`
+
+In some cases `chmod +x ./entrypoint.sh` on host system may be required
 
 ### Quick API Description
 
