@@ -9,6 +9,7 @@ def getFiles():
     return jsonify([f.to_dict() for f in files])
 
 # Get file data
-@app.route("/file/<file_id>")
-def getFile(file_id=''):
-    return "file id %s data get" % file_id
+@app.route("/file/<int:file_id>")
+def getFile(file_id=0):
+    file = File.query.get_or_404(file_id)
+    return jsonify(file.to_dict())

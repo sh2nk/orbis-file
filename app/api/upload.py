@@ -2,33 +2,40 @@ from app import app, db
 from app.models import File
 from flask import request, abort, jsonify
 from werkzeug.utils import secure_filename
-import os, uuid
+import os, uuid, pathlib
 
 class Filename:
-    def __init__(self, name='') -> None:
+    def __init__(self, name='', uuid=None) -> None:
         if type(name) == str:
-            self.__name = name
-            self.__ext = name.rsplit('.', 1)[1].lower()
+            path = pathlib.Path(name)
+            exts = path.suffixes
+            
+            for e in exts:
+                path = path.stem
+                path = pathlib.Path(path)
+
+            self.__name = str(path)
+            self.__ext = "".join(exts)
+            self.__uuid = uuid
         else:
             raise ValueError("Filename should be string!")
 
     def __call__(self, *args, **kwds) -> str:
         return self.__name
 
-    def getName(self):
+    def get_name(self):
         return self.__name
 
-    def getExt(self):
-        return ".%s" % self.__ext
+    def get_ext(self):
+        return self.__ext
 
-    def getID(self):
-        print(str(uuid.uuid4()))
-        print(self.__name)
-        print(self.__ext)
-        return "%s.%s" % (str(uuid.uuid4()), self.__ext)
+    def make_id(self):
+        if not self.__uuid:
+            self.__uuid = str(uuid.uuid4()) + self.__ext
+        return self.__uuid
 
-    def isDisabled(self):
-        return '.' in self.__name and self.__ext in app.config["DISABLED_EXTENSIONS"]
+    def is_disabled(self):
+        return self.__ext in app.config["DISABLED_EXTENSIONS"]
 
 
 # Upload file
@@ -46,17 +53,17 @@ def uploadFile(comment=""):
     if not raw:
         return jsonify({"error": "Empty file part"}), 400
 
-    if not filename.isDisabled():
-        fileid = filename.getID()
+    if not filename.is_disabled():
+        fileid = filename.make_id()
         path = os.path.join(app.config['UPLOAD_FOLDER'], fileid)
         
         raw.save(path)
         size = os.stat(path).st_size
 
-        file = File(name=filename.getName(), \
-                    extension=filename.getExt(), \
+        file = File(name=filename.get_name(), \
+                    extension=filename.get_ext(), \
                     size=size, \
-                    path=path, \
+                    path=app.config['UPLOAD_FOLDER'], \
                     comment=comment)
 
         db.session.add(file)
@@ -64,4 +71,4 @@ def uploadFile(comment=""):
     else:
         return jsonify({"error": "This file extension is disabled"}), 400
     
-    return {"message": "Added %s succsesfully" % file.name}
+    return {"message": "Added %s succsesfully" % (file.name + file.extension)}

@@ -9,4 +9,4 @@ class BasicConfig:
 class DevConfig(BasicConfig):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get("DB_URI") or "postgres://user:password@localhost:5432/orbis-file"
-    UPLOAD_FOLDER = os.environ.get("UPLOAD_FOLDER") or "./__storage__/"
+    UPLOAD_FOLDER = os.path.abspath(os.environ.get("UPLOAD_FOLDER") or "./__storage__/")
