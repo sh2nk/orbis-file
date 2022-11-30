@@ -5,15 +5,27 @@
 
 ### Configuration
 
-Make sure that you exported all necessary environment variables, otherwise they'll fallback to dummy values.
-There is `config.env.example`:
+Make sure that you created `config.env` file. 
+Use `config.env.example` as template:
 
 ```dosini
-FLASK_APP="run.py"
-FLASK_ENV="config.DevConfig"
-DB_URI = "postgresql://user:passwd@localhost:5432/orbisfile"
-UPLOAD_FOLDER= "/home/storage/"
+FLASK_APP=run.py
+FLASK_DEBUG=1
+DB_URI=postgresql://user:passwd@localhost:5432/orbisfile
+UPLOAD_FOLDER=/home/storage/
+SQL_HOST=db
+SQL_PORT=5432
+DATABASE=postgres
+POSTGRES_USER=user
+POSTGRES_PASSWORD=passwd
+POSTGRES_DB=orbisfile
 ```
+
+### Deploy with Docker
+
+When deploying this setup, the fileserver will be available at port 80
+
+`docker compose up`
 
 ### Quick API Description
 
