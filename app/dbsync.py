@@ -4,9 +4,9 @@ from pathlib import Path
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 import os, uuid
 
-print(" * Starting DB sync")
-
-with app.app_context():
+@app.cli.command("syncdb")
+def db_sync():
+    print(" * Starting db sync")
     paths = list()
     for path, subdirs, files in os.walk(app.config['UPLOAD_FOLDER']):
         for name in files:
