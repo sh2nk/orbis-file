@@ -27,4 +27,4 @@ def update_file(file_id=''):
     db.session.add(file)
     db.session.commit()
 
-    return {"message": "file id %s updated succsessfully" % file.id}
+    return {"message": "Edited file succsessfully", "id": file.id}

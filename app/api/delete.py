@@ -9,4 +9,4 @@ def delete_file(file_id=''):
     db.session.delete(file)
     db.session.commit()
     
-    return {"message": "file id %s deleted succsessfully" % file.id}
+    return {"message": "Deleted file succsessfully", "id": file.id}

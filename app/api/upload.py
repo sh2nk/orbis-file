@@ -70,4 +70,4 @@ def upload_file(comment=""):
     else:
         return jsonify({"error": "This file extension is disabled"}), 400
     
-    return {"message": "Added %s succsesfully" % (file.name + file.extension)}
+    return {"message": "Added file succsesfully", "id": file.id}
