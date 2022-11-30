@@ -9,5 +9,6 @@ app.config.from_object(os.environ.get("FLASK_ENV") or "config.DevConfig")
 db = SQLAlchemy(app)
 migrate = Migrate(app,  db)
 
+from . import dbsync
 from . import api
 from . import models
