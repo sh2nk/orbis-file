@@ -91,10 +91,12 @@ Response format:
 
 ##### Edit file data
 
-```json
+```
 PUT /file/<uuid4>
 
 Content-Type: application/json
+```
+```json
 {
     "name": "new_filename",
     "comment": "example comment",
