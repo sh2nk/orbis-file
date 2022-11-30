@@ -4,7 +4,7 @@ from app import db
 class File(db.Model):
     __tablename__ = "files"
 
-    id = db.Column(db.Integer(), primary_key=True)
+    id = db.Column(db.String(255), primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     extension = db.Column(db.String(255), nullable=False)
     size = db.Column(db.Integer(), nullable=False)
@@ -13,7 +13,8 @@ class File(db.Model):
     updated_at = db.Column(db.DateTime(), default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
     comment = db.Column(db.String())
 
-    def __init__(self, name, extension, size, path, comment):
+    def __init__(self, id, name, extension, size, path, comment):
+        self.id = id
         self.name = name
         self.extension = extension
         self.size = size

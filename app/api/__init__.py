@@ -1,1 +1,1 @@
-from . import upload, download, get, search, update
+from . import upload, download, get, search, update, delete

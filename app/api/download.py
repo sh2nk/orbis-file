@@ -1,11 +1,12 @@
 from app import app, db
 from app.models import File
-from flask import send_file
+from flask import send_from_directory
 
 # Download file
-@app.route("/file/download/<int:file_id>")
-def downloadFile(file_id=0):
+@app.route("/file/download/<file_id>")
+def download_file(file_id=''):
     file = File.query.get_or_404(file_id)
-    return send_file(path_or_file=file.path, \
-                    as_attachment=True, \
-                    download_name=file.name)
+    return send_from_directory(directory=file.path, \
+                                path=file.id+file.extension, \
+                                as_attachment=True, \
+                                download_name=file.name+file.extension)

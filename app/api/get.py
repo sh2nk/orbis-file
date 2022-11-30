@@ -4,12 +4,12 @@ from flask import jsonify
 
 # Get all files list
 @app.route("/files")
-def getFiles():
+def get_files():
     files = File.query.all()
     return jsonify([f.to_dict() for f in files])
 
 # Get file data
-@app.route("/file/<int:file_id>")
-def getFile(file_id=0):
+@app.route("/file/<file_id>")
+def get_file(file_id=''):
     file = File.query.get_or_404(file_id)
     return jsonify(file.to_dict())
