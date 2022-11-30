@@ -2,17 +2,18 @@ from app import app, db
 from app.models import File
 from flask import request, abort, jsonify
 from werkzeug.utils import secure_filename
-import os, uuid, pathlib
+from pathlib import Path
+import os, uuid
 
 class Filename:
     def __init__(self, name='') -> None:
         if type(name) == str:
-            path = pathlib.Path(name)
+            path = Path(name)
             exts = path.suffixes
             
             for e in exts:
                 path = path.stem
-                path = pathlib.Path(path)
+                path = Path(path)
 
             self.__name = str(path)
             self.__ext = "".join(exts)
